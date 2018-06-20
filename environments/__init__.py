@@ -38,7 +38,7 @@ except ImportError:
 
 # User-defined environments
 objects = read_objects()
-envs = objects['environments']
+envs = objects['environment']
 
 cwd = os.path.curdir
 for name, env in envs.items():

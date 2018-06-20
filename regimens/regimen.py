@@ -2,7 +2,7 @@ import tensorflow as tf
 from typing import Type, Union, NamedTuple, Dict, Any, Callable
 from contextlib import closing
 from agents import Agent
-from objective import Objective
+from objectives import Objective
 from environments import Maker
 from .plugin import Plugin
 

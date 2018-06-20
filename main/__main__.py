@@ -39,6 +39,8 @@ list_parser.set_defaults(func=list_main)
 
 # init
 def init_main(args:argparse.Namespace):
+    print('q2 is initializing...')
+    print()
     if not os.path.exists(objects_file):
         print('Creating objects.yaml...', end=' ')
         write_objects(default_objects)
@@ -54,12 +56,20 @@ def init_main(args:argparse.Namespace):
             print('done.')
         else:
             print('Module {} found.'.format(module))
+    print()
     print('Finished initializing. Your q2 project is ready to go!')
     print()
-    print('Next steps:')
-    print('\tGenerate an agent: `q2 generate agent my_new_agent`')
-    print('\tList available training regimens: `q2 list regimens`')
-    print('\tRun a training session: `q2 train --agent random --regimen online`')
+    print('Some possible next steps:')
+    print()
+    print('\tGenerate an agent:')
+    print('\t  > q2 generate agent my_new_agent')
+    print()
+    print('\tList available training regimens:')
+    print('\t  > q2 list regimens')
+    print()
+    print('\tRun a training session:')
+    print('\t  > q2 train --env gym.CartPole-v1 --agent random --regimen online --render')
+    print()
 
 init_parser = subparsers.add_parser('init', description='Initialize a new q2 project.')
 init_parser.set_defaults(func=init_main)

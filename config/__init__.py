@@ -15,7 +15,7 @@ object_types = [
 
 default_objects = dict()
 for ot in object_types:
-    default_objects = dict()
+    default_objects[ot] = dict()
 
 def pluralize(s:str):
     return s + 's'
