@@ -1,4 +1,5 @@
 from typing import Tuple
+from gym import Space
 from environments.maker import Maker
 from environments.environment import Environment, Action, State, Info
 
@@ -17,6 +18,12 @@ class {name}Env(Environment):
 
     def render(self):
         """Renders the environment to a display."""
+        pass
+
+    def action_space(self) -> Space:
+        pass
+
+    def observation_space(self) -> Space:
         pass
 
 

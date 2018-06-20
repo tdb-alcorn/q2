@@ -32,6 +32,9 @@ class Regimen(object):
     # plugins: List[Regimen] -- other regimens to be run at each step
     # agent_constructor: Type[Agent] -- agent constructor
     # agent: Agent -- the agent
+    # env_maker -- a Maker that creates the environment
+    # action_space -- the action_space of the environment
+    # observation_space -- the observation_space of the environment
     # env -- the environment
     # objective -- the objective
     def __init__(self,
@@ -68,11 +71,15 @@ class Regimen(object):
     ):
         self.env_maker = env_maker
         self.state = state
+        dummy_env = self.env_maker.make(self.state)
+        self.action_space = dummy_env.action_space
+        self.observation_space = dummy_env.observation_space
+        dummy_env.close()
 
         tf.logging.set_verbosity(tf.logging.WARN)
         tf.reset_default_graph()
 
-        self.agent = self.agent_constructor()
+        self.agent = self.agent_constructor(self.observation_space, self.action_space)
 
         for plugin in self.plugins:
             plugin.before_training(self)

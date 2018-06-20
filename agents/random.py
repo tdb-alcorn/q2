@@ -1,33 +1,67 @@
-from agents.agent import Agent
 import tensorflow as tf
 import numpy as np
-import agents.config as config
+from gym import Space
+from gym.spaces import Discrete, Box, MultiBinary
+from agents.agent import Agent
 
 
 class Random(Agent):
-    def __init__(self):
-        self.x = tf.Variable([1], dtype=tf.int32)
+    def __init__(self, observation_space:Space, action_space:Space):
+        self.action_space = action_space
+        self.name = type(self).__name__ + "Agent"
+        self.checkpoint_name = 'checkpoints/{}.ckpt'.format(self.name)
+
+        # Dummy variable so that save and load work out of the box
+        with tf.variable_scope(self.name):
+            self.x = tf.Variable([0], dtype=tf.int32)
+
+        # Some examples of working with different action spaces.
+        if isinstance(self.action_space, Discrete):
+            self.sample = tf.random_uniform(
+                self.action_space.shape,
+                dtype=tf.int32,
+                minval=0,
+                maxval=int(self.action_space.n),
+            )
+        elif isinstance(self.action_space, Box):
+            # TODO(tom): Handle Box bounds.
+            self.sample = tf.random_uniform(
+                self.action_space.shape,
+                dtype=tf.float32)
+        elif isinstance(self.action_space, MultiBinary):
+            self.sample = tf.random_uniform(
+                self.action_space.shape,
+                dtype=tf.int32,
+                minval=0,
+                maxval=2,
+            )
+        else:
+            # Fallback to sampling directly from the action_space
+            self.sample = tf.py_func(lambda: self.action_space.sample(), [], tf.float32)
         return
     
-    def load(self, sess:tf.Session,
-        # saver:tf.train.Saver,
-        ):
-        return
+    def load(self, sess:tf.Session):
+        train_vars = tf.trainable_variables(scope=self.name)
+        saver = tf.train.Saver(train_vars)
+        try:
+            saver.restore(sess, self.checkpoint_name)
+        except (tf.errors.InvalidArgumentError, tf.errors.NotFoundError):
+            # TODO(tom) Make this a log
+            print("Checkpoint file not found, skipping load")
     
-    def save(self, sess:tf.Session,
-        # saver:tf.train.Saver,
-        ):
-        return
+    def save(self, sess:tf.Session):
+        train_vars = tf.trainable_variables(scope=self.name)
+        saver = tf.train.Saver(train_vars)
+        saver.save(sess, self.checkpoint_name)
 
     def act(self,
         sess:tf.Session,
         state:np.array,
         train:bool,
         ) -> np.array:
-        r = np.random.random(size=config.env["action_shape"])
-        on = np.ones(config.env["action_shape"])
-        off = np.zeros(config.env["action_shape"])
-        return np.where(r > 0.5, on, off)
+        with tf.Session() as sess:
+            return sess.run(tf.cast(self.sample, tf.float32))
+        
     
     def step(self,
         sess:tf.Session,

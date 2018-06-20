@@ -50,5 +50,7 @@ def import_from_objects(objects_subtree:Dict[str, Any]) -> List[Any]:
         except ImportError:
             # TODO(tom) Warning log import errors
             continue
+        except FileNotFoundError:
+            continue
 
     return modules

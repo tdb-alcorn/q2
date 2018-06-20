@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 import tensorflow as tf
 import numpy as np
+from gym import Space
 
 
 class Agent(ABC):
     @abstractmethod
-    def __init__(self
-        ):
+    def __init__(self, observation_space:Space, action_space:Space):
         pass
 
     @abstractmethod

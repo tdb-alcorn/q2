@@ -7,7 +7,7 @@ class Online(Regimen):
         if self.sess is not None:
             self.sess.close()
         tf.reset_default_graph()
-        self.agent = self.agent_constructor()
+        self.agent = self.agent_constructor(self.observation_space, self.action_space)
         self.sess = tf.Session()
         self.sess.run(tf.global_variables_initializer())
         self.agent.load(self.sess)

@@ -1,5 +1,6 @@
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractproperty
 from typing import Any, Tuple
+from gym import Space
 
 
 Action = Any
@@ -20,4 +21,17 @@ class Environment(ABC):
     @abstractmethod
     def render(self) -> None:
         """Renders the environment to a display."""
+        pass
+
+    @abstractmethod
+    def close(self) -> None:
+        """Closes the environment."""
+        pass
+
+    @abstractproperty
+    def action_space(self) -> Space:
+        pass
+
+    @abstractproperty
+    def observation_space(self) -> Space:
         pass
