@@ -2,16 +2,13 @@ import os
 import sys
 import argparse
 from datetime import datetime
-from config import object_types, read_objects, write_objects
+from config import object_types, read_objects, write_objects, pluralize
 
 
 def get_template(object_type:str) -> str:
     template_path = os.path.join(os.path.dirname(__file__), 'templates/{}.py'.format(object_type))
     with open(template_path, 'r') as f:
         return f.read()
-
-def pluralize(s:str):
-    return s + 's'
 
 
 # Argument parser

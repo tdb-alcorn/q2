@@ -13,6 +13,15 @@ object_types = [
     'regimen',
 ]
 
+default_objects = dict()
+for ot in object_types:
+    default_objects = dict()
+
+def pluralize(s:str):
+    return s + 's'
+
+all_modules = [pluralize(ot) for ot in object_types]
+
 def read_objects() -> Dict:
     with open(objects_file) as f:
         objects = yaml.load(f.read())
