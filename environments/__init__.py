@@ -1,6 +1,6 @@
 import os
 from .maker import Maker
-from config import read_objects, import_from_file
+from config import read_objects, import_from_objects
 
 # Dict[str, Maker]
 all_environments = dict()
@@ -40,14 +40,6 @@ except ImportError:
 objects = read_objects()
 envs = objects['environment']
 
-cwd = os.path.curdir
-for name, env in envs.items():
-    if os.path.isabs(env['path']):
-        path = env['path']
-    else:
-        path = os.path.join(cwd, env['path'])
-    try:
-        all_environments[name] = import_from_file(path, env['main'], 'environment.' + env)
-    except ImportError:
-        # TODO(tom) Warning log import errors
-        pass
+modules = import_from_objects(envs)
+for name, module in modules.items():
+    all_environments[name] = module
