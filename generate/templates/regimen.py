@@ -1,4 +1,4 @@
-from regimens.regimen import Regimen
+from q2.regimens.regimen import Regimen
 
 
 class {name}(Regimen):

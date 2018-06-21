@@ -20,14 +20,31 @@ def add_arguments(parser:argparse.ArgumentParser) -> None:
     parser.add_argument('object_type', choices=object_types, default=argparse.SUPPRESS, help='type of object to create')
     parser.add_argument('name', type=str, default=argparse.SUPPRESS, help='name of the new object')
 
+def indefinite_article(word) -> str:
+    vowels = 'aeiou'
+    if len(word) == 0:
+        return 'a'
+    if word[0] in vowels:
+        return 'an'
+    return 'a'
 
 # Main
 def main(args:argparse.Namespace):
     objects = read_objects()
 
     if args.name in objects[args.object_type]:
-        print("An {} called {} already exists.".format(args.object_type, args.name), file=sys.stderr)
+        print("{} {} called {} already exists.".format(
+            indefinite_article(args.object_type).title(),
+            args.object_type,
+            args.name
+        ), file=sys.stderr)
         sys.exit(1)
+    
+    print("Creating {} {} called {}...".format(
+        indefinite_article(args.object_type),
+        args.object_type,
+        args.name
+    ))
 
     object_data = {
         # TODO: Use UTC?
@@ -38,9 +55,18 @@ def main(args:argparse.Namespace):
 
     contents = get_template(args.object_type)
 
+    print("Rendering template...")
+    print("Writing new {} to {}...".format(args.object_type, object_data['path']))
     with open(object_data['path'], 'w') as f:
         f.write(contents.format(name=object_data['main']))
 
+    print("Updating objects.yaml...")
     objects[args.object_type][args.name] = object_data
-
     write_objects(objects)
+
+    print('Done.')
+    print()
+    print("Your new {} is ready for you at {}. Open it up and start hacking!".format(
+        args.object_type,
+        object_data['path']
+    ))

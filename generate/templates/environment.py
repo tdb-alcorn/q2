@@ -1,7 +1,7 @@
 from typing import Tuple
 from gym import Space
-from environments.maker import Maker
-from environments.environment import Environment, Action, State, Info
+from q2.environments.maker import Maker
+from q2.environments.environment import Environment, Action, State, Info
 
 
 class {name}Env(Environment):

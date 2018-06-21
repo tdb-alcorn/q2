@@ -236,16 +236,3 @@ class Regimen(object):
     
     def on_error(self, step:Step, exception:Exception):
         pass
-
-
-# class Epoch(object):
-#     def __init__(self, epoch:int, env):
-#         self.epoch = epoch
-#         self.env = env
-
-# class Episode(object):
-#     def __init__(self, episode:int, render:bool=False):
-#         self.episode = episode
-#         self.render = render
-#         self.total_reward = 0
-

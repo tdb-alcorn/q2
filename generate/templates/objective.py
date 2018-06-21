@@ -1,6 +1,6 @@
 import tensorflow as tf
 from typing import Union
-from objectives.objective import Objective
+from q2.objectives.objective import Objective
 
 
 class {name}(Objective):
