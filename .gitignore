@@ -1,29 +1,5 @@
 __pycache__
+*.pyc
 .vscode
-*-results
-results
-.ipynb_checkpoints
-
-# Loss data
-*loss.csv
-*reward.csv
-
-# Sega playback files
-*.bk2
-*.mp4
-
-# Tensorflow checkpoints
-checkpoints
-checkpoints-scratch
-
-# Training data
-*.npz
-
-# Sega roms
-roms
-
-# pip artifact
-src
-
-# Config
-*.yaml
+/*.egg-info
+/dist/

@@ -46,10 +46,11 @@ def main(args:argparse.Namespace):
         args.name
     ))
 
+    cwd = os.getcwd()
     object_data = {
         # TODO: Use UTC?
         'created_at': datetime.now().isoformat(),
-        'path': os.path.join(os.path.curdir, pluralize(args.object_type), args.name + '.py'),
+        'path': os.path.join(cwd, pluralize(args.object_type), args.name + '.py'),
         'main': args.name.title(),
     }
 

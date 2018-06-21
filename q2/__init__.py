@@ -2,12 +2,12 @@ import os
 import argparse
 import q2.generate as generate
 import q2.train as train
-from q2.config import object_types, all_modules, objects_file, default_objects, write_objects, tld
+from q2.config import object_types, all_modules, objects_file, default_objects, write_objects
 
 def list_main(args:argparse.Namespace):
     import importlib
 
-    module = importlib.import_module(args.object_type)
+    module = importlib.import_module('q2.' + args.object_type)
     all_objects = getattr(module, 'all_' + args.object_type)
     print('Available {}:'.format(args.object_type))
     for obj in all_objects:
@@ -24,7 +24,8 @@ def init_main(args:argparse.Namespace):
         print('objects.yaml found.')
     # create agents, environments, objectives, regimens directories
     for module in all_modules:
-        module_path = os.path.join(tld, module)
+        cwd = os.getcwd()
+        module_path = os.path.join(cwd, module)
         if not os.path.exists(module_path):
             print('Creating module {}...'.format(module), end=' ')
             os.mkdir(module_path)

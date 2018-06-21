@@ -32,12 +32,12 @@ def err_not_found(item:str, available:List[str], item_type:str=''):
 
 
 def main(args:argparse.Namespace):
-    from agents import all_agents
-    from objectives import Passthrough
-    from environments import all_environments
-    from regimens import Regimen, all_regimens, Online
-    from regimens.plugins import DisplayFramerate, ManualOverride, NoProgressEarlyStopping
-    from train.utils import random_if_empty, ensure_directory_exists, random_choice
+    from q2.agents import all_agents
+    from q2.objectives import Passthrough
+    from q2.environments import all_environments
+    from q2.regimens import Regimen, all_regimens, Online
+    from q2.regimens.plugins import DisplayFramerate, ManualOverride, NoProgressEarlyStopping
+    from .utils import random_if_empty, ensure_directory_exists, random_choice
 
     if args.environment in all_environments:
         env_maker = all_environments[args.environment]

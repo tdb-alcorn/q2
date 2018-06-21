@@ -4,8 +4,8 @@ import importlib.util
 from typing import Dict, List, Any
 
 
-tld = os.path.join(os.path.dirname(__file__), '..')
-objects_file = os.path.join(tld, 'objects.yaml')
+cwd = os.getcwd()
+objects_file = os.path.join(cwd, 'objects.yaml')
 object_types = [
     'agent',
     'environment',

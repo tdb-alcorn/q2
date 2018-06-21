@@ -2,7 +2,7 @@ import sys
 import time
 import tty
 from collections import deque
-from agents.utils import make_actions
+from q2.agents.utils import make_actions
 from ..plugin import Plugin
 from ..regimen import Regimen, Step
 

@@ -3,10 +3,10 @@ import tensorflow as tf
 import numpy as np
 from collections import deque
 from ..noise import DecayProcess
-from ..agent import Agent
-from agents.config import env, deep_q
-from agents.deep_q.q_net import QNet
-from agents.utils import make_actions, useful_combinations, find_action_idx
+from .. import Agent
+# from ..agents.config import env, deep_q
+from .q_net import QNet
+from ..utils import make_actions, useful_combinations, find_action_idx
 
 Net = TypeVar('Net', bound=QNet)
 
