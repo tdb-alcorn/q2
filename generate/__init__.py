@@ -39,7 +39,7 @@ def main(args:argparse.Namespace):
             args.name
         ), file=sys.stderr)
         sys.exit(1)
-    
+
     print("Creating {} {} called {}...".format(
         indefinite_article(args.object_type),
         args.object_type,
