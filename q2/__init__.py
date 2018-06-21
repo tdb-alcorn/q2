@@ -1,8 +1,6 @@
 import os
 import argparse
-import q2.generate as generate
-import q2.train as train
-from q2.config import object_types, all_modules, objects_file, default_objects, write_objects
+
 
 def list_main(args:argparse.Namespace):
     import importlib
@@ -14,6 +12,8 @@ def list_main(args:argparse.Namespace):
         print('\t', obj, sep='')
 
 def init_main(args:argparse.Namespace):
+    from q2.config import all_modules, objects_file, default_objects, write_objects
+
     print('q2 is initializing...')
     print()
     if not os.path.exists(objects_file):
@@ -48,6 +48,10 @@ def init_main(args:argparse.Namespace):
     print()
 
 def main():
+    import q2.generate as generate
+    import q2.train as train
+    from q2.config import all_modules
+
     parser = argparse.ArgumentParser(
         prog='q2',
         description='A reinforcement learning framework and command line tool',
