@@ -11,8 +11,16 @@ try:
     import gym
 
     for env_spec in gym.envs.registry.all():
-        all_environments['gym.' + env_spec.id] = Maker(
-            make=lambda state, *args, **kwargs: gym.make(env_spec.id, *args, **kwargs),
+        name = 'gym.' + env_spec.id
+
+        def make_gym_make(id_:str):
+            def make(state, *args, **kwargs):
+                return gym.make(id_, *args, **kwargs)
+            return make
+
+        all_environments[name] = Maker(
+            name=name,
+            make=make_gym_make(env_spec.id),
             states=[None],
         )
 except ImportError:
@@ -29,8 +37,16 @@ try:
         except FileNotFoundError:
             is_installed = False
         if is_installed:
-            all_environments['retro.' + game] = Maker(
-                make=lambda state, *args, **kwargs: retro.make(game, *args, state=state, **kwargs),
+            name = 'retro.' + game
+
+            def make_retro_make(id_:str):
+                def make(state, *args, **kwargs):
+                    return retro.make(id_, *args, state=state, **kwargs)
+                return make
+
+            all_environments[name] = Maker(
+                name=name,
+                make=make_retro_make(game),
                 states=retro.list_states(game),
             )
 except ImportError:

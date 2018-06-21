@@ -40,6 +40,7 @@ states = [
 
 
 {name} = Maker(
+    name={name},
     make=make,
     states=states,
 )

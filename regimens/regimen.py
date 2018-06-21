@@ -25,7 +25,7 @@ class Step(object):
 
 
 class Regimen(object):
-    # Properties
+    ### Properties ###
     # sess: tf.Session -- the tensorflow session
     # teaching: bool -- whether to read input from the controller
     # message: str -- to be logged at each time step
@@ -54,7 +54,6 @@ class Regimen(object):
         self.env = None
         self.agent = None
         self.action = None
-        self.game = ''
         self.state = ''
     
     def log(self, message:str):
@@ -106,7 +105,11 @@ class Regimen(object):
         out_filename:str='',
     ):
         try:
-            print("Playing game {} on level {}".format(self.game, self.state))
+            if self.state is not None:
+                print("Running environment {} from state {}".format(self.env_maker.name, self.state))
+            else:
+                print("Running environment {}".format(self.env_maker.name))
+
             if bk2dir is not None:
                 self.env = self.env_maker.make(self.state, bk2dir=bk2dir)
             else:
@@ -118,14 +121,14 @@ class Regimen(object):
 
             for episode in range(episodes):
                 reward = self.run_episode(episode, render=render)
-                self.rewards.append((epoch, self.game, self.state, episode, reward))
+                self.rewards.append((epoch, self.env_maker.name, self.state, episode, reward))
 
             for plugin in self.plugins:
                 plugin.after_epoch(self, epoch)
             self.after_epoch(epoch)
 
         finally:
-            print("Saving agent... ", end='')
+            print("Saving agent...", end=' ')
             self.agent.save(self.sess)
             print('Done.')
             if hasattr(self.agent, 'losses'):

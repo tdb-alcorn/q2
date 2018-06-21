@@ -60,7 +60,7 @@ class Random(Agent):
         train:bool,
         ) -> np.array:
         with tf.Session() as sess:
-            return sess.run(tf.cast(self.sample, tf.float32))
+            return sess.run(self.sample)
         
     
     def step(self,
