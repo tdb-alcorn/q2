@@ -1,5 +1,5 @@
 import argparse
-from generate import get_template, main, parser_kwargs, add_arguments
+from q2.train import parser_kwargs, add_arguments, main
 
 
 parser = argparse.ArgumentParser(**parser_kwargs)

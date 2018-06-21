@@ -1,7 +1,7 @@
 import tensorflow as tf
 from .regimen import Regimen
-from train.utils import random_choice
-from environments import all_environments
+from q2.train.utils import random_choice
+from q2.environments import all_environments
 
 
 class RL2(Regimen):

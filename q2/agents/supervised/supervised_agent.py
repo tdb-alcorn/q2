@@ -1,6 +1,6 @@
 import tensorflow as tf
 import numpy as np
-from agents.agent import Agent
+from ..agent import Agent
 from abc import ABC, abstractmethod
 
 class Supervised(Agent, ABC):

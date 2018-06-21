@@ -1,8 +1,8 @@
 from typing import Dict, Type
-from agents.agent import Agent
-from agents.random import Random
-from agents.deep_q.deep_q_agent import DeepQAgent
-from config import read_objects, import_from_objects
+from .agent import Agent
+from .random import Random
+from .deep_q.deep_q_agent import DeepQAgent
+from q2.config import read_objects, import_from_objects
 
 
 # Dict[str, Agent]

@@ -1,7 +1,7 @@
 from .rl2 import RL2
 from .online import Online
 from .regimen import Regimen
-from config import read_objects, import_from_objects
+from q2.config import read_objects, import_from_objects
 
 
 # Dict[str, Regimen]

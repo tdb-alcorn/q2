@@ -1,5 +1,4 @@
-from agents.agent import Agent
-from agents import all_agents
+from q2.agents import all_agents, Agent
 from ..regimen import Regimen
 from train.generate import Memory, Datum, Episode
 from train.utils import write_to_csv

@@ -1,6 +1,6 @@
 import os
 from .maker import Maker
-from config import read_objects, import_from_objects
+from q2.config import read_objects, import_from_objects
 
 # Dict[str, Maker]
 all_environments = dict()

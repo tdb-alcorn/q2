@@ -1,5 +1,5 @@
 import argparse
-from train import parser_kwargs, add_arguments, main
+from . import get_template, main, parser_kwargs, add_arguments
 
 
 parser = argparse.ArgumentParser(**parser_kwargs)

@@ -2,7 +2,7 @@ import os
 import sys
 import argparse
 from datetime import datetime
-from config import object_types, read_objects, write_objects, pluralize
+from q2.config import object_types, read_objects, write_objects, pluralize
 
 
 def get_template(object_type:str) -> str:

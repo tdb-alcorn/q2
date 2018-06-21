@@ -1,29 +1,9 @@
 import os
 import argparse
-import generate
-import train
-from config import object_types, all_modules, objects_file, default_objects, write_objects, tld
+import q2.generate as generate
+import q2.train as train
+from q2.config import object_types, all_modules, objects_file, default_objects, write_objects, tld
 
-
-parser = argparse.ArgumentParser(
-    prog='q2',
-    description='A reinforcement learning framework and command line tool',
-)
-
-subparsers = parser.add_subparsers()
-
-
-# generate
-generate_parser = subparsers.add_parser('generate', **generate.parser_kwargs)
-generate.add_arguments(generate_parser)
-generate_parser.set_defaults(func=generate.main)
-
-# train
-train_parser = subparsers.add_parser('train', **train.parser_kwargs)
-train.add_arguments(train_parser)
-train_parser.set_defaults(func=train.main)
-
-# list
 def list_main(args:argparse.Namespace):
     import importlib
 
@@ -33,11 +13,6 @@ def list_main(args:argparse.Namespace):
     for obj in all_objects:
         print('\t', obj, sep='')
 
-list_parser = subparsers.add_parser('list', description='List all available entities.')
-list_parser.add_argument('object_type', choices=all_modules, help='type of object to list')
-list_parser.set_defaults(func=list_main)
-
-# init
 def init_main(args:argparse.Namespace):
     print('q2 is initializing...')
     print()
@@ -71,9 +46,32 @@ def init_main(args:argparse.Namespace):
     print('\t  > q2 train --env gym.CartPole-v1 --agent random --regimen online --render')
     print()
 
-init_parser = subparsers.add_parser('init', description='Initialize a new q2 project.')
-init_parser.set_defaults(func=init_main)
+def main():
+    parser = argparse.ArgumentParser(
+        prog='q2',
+        description='A reinforcement learning framework and command line tool',
+    )
+    subparsers = parser.add_subparsers()
+
+    # generate
+    generate_parser = subparsers.add_parser('generate', **generate.parser_kwargs)
+    generate.add_arguments(generate_parser)
+    generate_parser.set_defaults(func=generate.main)
+
+    # train
+    train_parser = subparsers.add_parser('train', **train.parser_kwargs)
+    train.add_arguments(train_parser)
+    train_parser.set_defaults(func=train.main)
+
+    # list
+    list_parser = subparsers.add_parser('list', description='List all available entities.')
+    list_parser.add_argument('object_type', choices=all_modules, help='type of object to list')
+    list_parser.set_defaults(func=list_main)
+
+    # init
+    init_parser = subparsers.add_parser('init', description='Initialize a new q2 project.')
+    init_parser.set_defaults(func=init_main)
 
 
-args = parser.parse_args()
-args.func(args)
+    args = parser.parse_args()
+    args.func(args)

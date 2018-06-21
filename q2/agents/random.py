@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 from gym import Space
 from gym.spaces import Discrete, Box, MultiBinary
-from agents.agent import Agent
+from .agent import Agent
 
 
 class Random(Agent):

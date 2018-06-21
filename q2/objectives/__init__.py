@@ -1,6 +1,6 @@
 from .objective import Objective
 from .passthrough import Passthrough
-from config import read_objects, import_from_objects
+from q2.config import read_objects, import_from_objects
 
 # Dict[str, Objective]
 all_objectives = {
