@@ -1,14 +1,14 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='q2',
-    version='0.1',
+    version='0.1.1',
     description='A reinforcement learning framework and command line tool',
     url='https://github.com/tdb-alcorn/q2',
     author='Tom Alcorn',
     author_email='tdb.alcorn@gmail.com',
     license='MIT',
-    packages=['q2'],
+    packages=find_packages(),
     install_requires=[
         'numpy',
         'tensorflow',
@@ -17,7 +17,8 @@ setup(
         'gym-retro',
     ],
     entry_points={
-        'console_scripts': ['q2=q2:main']
+        'console_scripts': ['q2=q2.tool:main'],
     },
+    include_package_data=True,
     zip_safe=False,
 )

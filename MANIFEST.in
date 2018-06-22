@@ -1,0 +1,2 @@
+include README.md
+include q2/generate/templates/*
