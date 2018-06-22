@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='q2',
-    version='0.1.1',
+    version='0.1.2',
     description='A reinforcement learning framework and command line tool',
     url='https://github.com/tdb-alcorn/q2',
     author='Tom Alcorn',
