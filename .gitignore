@@ -4,3 +4,6 @@ __pycache__
 /*.egg-info
 /dist/
 /build/
+
+/docs/_build/
+/old-docs/

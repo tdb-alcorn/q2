@@ -1,3 +1,10 @@
+"""
+q2.agents
+=========
+
+The agents
+"""
+
 from typing import Dict, Type
 from .agent import Agent
 from .random import Random

@@ -23,8 +23,11 @@ def pluralize(s:str):
 all_modules = [pluralize(ot) for ot in object_types]
 
 def read_objects() -> Dict:
-    with open(objects_file) as f:
-        objects = yaml.load(f.read())
+    try:
+        with open(objects_file) as f:
+            objects = yaml.load(f.read())
+    except FileNotFoundError:
+        objects = default_objects
     return objects
 
 def write_objects(objects:Dict):
