@@ -48,6 +48,8 @@ class Regimen(object):
         self.agent_constructor = agent_constructor
         self.rewards = list()
         self.losses = list()
+        self.finished = False
+        self.offline = False
 
         # placeholders
         self.sess = None
@@ -80,22 +82,39 @@ class Regimen(object):
 
         self.agent = self.agent_constructor(self.observation_space, self.action_space)
 
+        self.sess = tf.Session()
+        self.sess.run(tf.global_variables_initializer())
+
         for plugin in self.plugins:
             plugin.before_training(self)
         self.before_training()
 
-        for epoch in range(epochs):
-            self.run_epoch(
-                epoch,
-                episodes_per_epoch,
-                render=render,
-                bk2dir=bk2dir,
-                out_filename=out_filename
-            )
+        if epochs == -1:
+            epoch_count = 0
+            while not self.finished:
+                self.run_epoch(
+                    epoch_count,
+                    episodes_per_epoch,
+                    render=render,
+                    bk2dir=bk2dir,
+                    out_filename=out_filename
+                )
+                epoch_count += 1
+        else:
+            for epoch in range(epochs):
+                self.run_epoch(
+                    epoch,
+                    episodes_per_epoch,
+                    render=render,
+                    bk2dir=bk2dir,
+                    out_filename=out_filename
+                )
         
         for plugin in self.plugins:
             plugin.after_training(self)
         self.after_training()
+
+        self.sess.close()
 
     def run_epoch(self,
         epoch:int,
@@ -105,15 +124,16 @@ class Regimen(object):
         out_filename:str='',
     ):
         try:
-            if self.state is not None:
-                print("Running environment {} from state {}".format(self.env_maker.name, self.state))
-            else:
-                print("Running environment {}".format(self.env_maker.name))
+            if not self.offline:
+                if self.state is not None:
+                    print("Running environment {} from state {}".format(self.env_maker.name, self.state))
+                else:
+                    print("Running environment {}".format(self.env_maker.name))
 
-            if bk2dir is not None:
-                self.env = self.env_maker.make(self.state, bk2dir=bk2dir)
-            else:
-                self.env = self.env_maker.make(self.state)
+                if bk2dir is not None:
+                    self.env = self.env_maker.make(self.state, bk2dir=bk2dir)
+                else:
+                    self.env = self.env_maker.make(self.state)
 
             for plugin in self.plugins:
                 plugin.before_epoch(self, epoch)
@@ -143,42 +163,45 @@ class Regimen(object):
         render:bool=False
     ) -> float:
         total_reward = 0
-        state = self.env.reset()
+        if self.env is not None:
+            state = self.env.reset()
+            self.step = Step(state)
+        else:
+            self.step = Step([])
         self.objective.reset()
-        step = Step(state)
 
         for plugin in self.plugins:
             plugin.before_episode(self, episode)
         self.before_episode(episode)
 
         try:
-            while not step.done:
+            while not self.step.done:
                 # Clear log message
                 self.message = list()
-                step.action = self.agent.act(self.sess, step.state, True)
+                self.step.action = self.agent.act(self.sess, self.step.state, True)
 
                 for plugin in self.plugins:
-                    plugin.before_step(self, step)
-                self.before_step(step)
+                    plugin.before_step(self, self.step)
+                self.before_step(self.step)
 
                 try:
-                    self.step(step, render=render)
-                    total_reward += step.reward
+                    self.run_step(self.step, render=render)
+                    total_reward += self.step.reward
                 except (Exception, KeyboardInterrupt) as e:
                     for plugin in self.plugins:
-                        if plugin.on_error(self, step, e):
+                        if plugin.on_error(self, self.step, e):
                             raise
-                    if self.on_error(step, e):
+                    if self.on_error(self.step, e):
                         raise
 
                 for plugin in self.plugins:
-                    plugin.after_step(self, step)
-                self.after_step(step)
+                    plugin.after_step(self, self.step)
+                self.after_step(self.step)
 
                 # Add basic message prefix
                 self.message = [
-                    "Frame: {:d}".format(step.frame),
-                    "Reward: {:.2f}".format(step.reward),
+                    "Frame: {:d}".format(self.step.frame),
+                    "Reward: {:.2f}".format(self.step.reward),
                     "Total: {:.2f}".format(total_reward),
                 ] + self.message
                 print("\033[K", end='\r')
@@ -194,7 +217,7 @@ class Regimen(object):
     def use(self, plugin:Plugin):
         self.plugins.append(plugin)
 
-    def step(self, step:Step, render:bool=False):
+    def run_step(self, step:Step, render:bool=False):
         next_state, reward, done, info = self.env.step(step.action)
         reward = self.objective.step(self.sess, step.state, step.action, reward)
         if render:

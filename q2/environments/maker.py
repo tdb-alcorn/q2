@@ -1,5 +1,5 @@
 from typing import NamedTuple, Callable, List, Any
-from .environment import Environment
+from .environment import Environment, NullEnv
 
 
 Maker = NamedTuple('Maker', [
@@ -7,3 +7,5 @@ Maker = NamedTuple('Maker', [
     ('make', Callable[[Any], Environment]),
     ('states', List[str]),
 ])
+
+NullMaker = Maker(name='null', make=lambda *args, **kwargs: NullEnv(), states=list())
