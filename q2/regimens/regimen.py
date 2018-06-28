@@ -66,6 +66,7 @@ class Regimen(object):
         state:str,
         epochs:int,
         episodes_per_epoch:int,
+        test:bool=False,
         render:bool=False,
         bk2dir=None,
         out_filename:str='',
@@ -76,6 +77,7 @@ class Regimen(object):
         self.action_space = dummy_env.action_space
         self.observation_space = dummy_env.observation_space
         dummy_env.close()
+        self.test = test
 
         tf.logging.set_verbosity(tf.logging.WARN)
         tf.reset_default_graph()
@@ -84,6 +86,8 @@ class Regimen(object):
 
         self.sess = tf.Session()
         self.sess.run(tf.global_variables_initializer())
+
+        self.agent.load(self.sess)
 
         for plugin in self.plugins:
             plugin.before_training(self)
@@ -178,7 +182,7 @@ class Regimen(object):
             while not self.step.done:
                 # Clear log message
                 self.message = list()
-                self.step.action = self.agent.act(self.sess, self.step.state, True)
+                self.step.action = self.agent.act(self.sess, self.step.state, not self.test)
 
                 for plugin in self.plugins:
                     plugin.before_step(self, self.step)
@@ -189,20 +193,25 @@ class Regimen(object):
                     total_reward += self.step.reward
                 except (Exception, KeyboardInterrupt) as e:
                     for plugin in self.plugins:
-                        if plugin.on_error(self, self.step, e):
+                        if not (plugin.on_error(self, self.step, e) == True):
                             raise
-                    if self.on_error(self.step, e):
+                    if not (self.on_error(self.step, e) == True):
                         raise
 
                 for plugin in self.plugins:
                     plugin.after_step(self, self.step)
                 self.after_step(self.step)
 
+                if hasattr(self.agent, 'message') and self.agent.message != "":
+                    self.log(self.agent.message)
+                if hasattr(self.env, 'message') and self.env.message != '':
+                    self.log(self.env.message)
+
                 # Add basic message prefix
                 self.message = [
+                    "Episode: {:d}".format(episode),
                     "Frame: {:d}".format(self.step.frame),
-                    "Reward: {:.2f}".format(self.step.reward),
-                    "Total: {:.2f}".format(total_reward),
+                    "Reward: {:.2f} / {:.2f}".format(self.step.reward, total_reward),
                 ] + self.message
                 print("\033[K", end='\r')
                 print('\t'.join(self.message), end='\r')
@@ -220,10 +229,10 @@ class Regimen(object):
     def run_step(self, step:Step, render:bool=False):
         next_state, reward, done, info = self.env.step(step.action)
         reward = self.objective.step(self.sess, step.state, step.action, reward)
+        step.update(next_state, reward, done, info)
+        self.agent.step(self.sess, step.state, step.action, reward, next_state, done)
         if render:
             self.env.render()
-        self.agent.step(self.sess, step.state, step.action, reward, next_state, done)
-        step.update(next_state, reward, done, info)
 
     # User-defined methods
     def config(self) -> Dict[str, Any]:

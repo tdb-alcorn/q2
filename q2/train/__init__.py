@@ -21,6 +21,7 @@ def add_arguments(parser:argparse.ArgumentParser):
     parser.add_argument('--save', const=True, default=False, action='store_const', dest='save', help='save episode for later offline training')
     parser.add_argument('--batch-size', type=int, dest='batch_size', default=1, metavar='N', help='batch size for offline training')
     parser.add_argument('--data', type=str, dest='data_pattern', default='./**/*_*_*_*.npz', help='glob pattern matching data for offline training')
+    parser.add_argument('--test', const=True, default=False, action='store_const', dest='test', help='set test flag so that agent can disable training-only behaviour')
 
 
 def err_not_found(item:str, available:List[str], item_type:str=''):
@@ -83,11 +84,11 @@ def main(args:argparse.Namespace):
     else:
         regimen = regimen_constructor(agent_constructor, objective)
         regimen.use(DisplayFramerate())
-        regimen.use(ManualOverride())
+        # regimen.use(ManualOverride())
         regimen.use(NoProgressEarlyStopping(500, progress_threshold=0))
         if args.save:
             regimen.use(SaveTrainingData())
 
 
     # Run training
-    regimen.train(env_maker, state, args.num_epochs, args.episodes_per_epoch, render=args.render, bk2dir=args.bk2dir, out_filename=args.out_filename)
+    regimen.train(env_maker, state, args.num_epochs, args.episodes_per_epoch, test=args.test, render=args.render, bk2dir=args.bk2dir, out_filename=args.out_filename)

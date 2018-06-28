@@ -33,12 +33,13 @@ Contents
    regimen
    structure
    tool
+   tutorial
 
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
 
-.. automodule:: q2.agents
+.. .. automodule:: q2.agents
     :members:
 
 

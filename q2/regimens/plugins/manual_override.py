@@ -60,5 +60,5 @@ class ManualOverride(Plugin):
         if isinstance(exception, KeyboardInterrupt):
             if not self.teaching:
                 self.teaching = True
-                return False
-        return True
+                return True  # Stop error propagation
+        return False

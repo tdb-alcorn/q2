@@ -9,7 +9,7 @@ class {name}(Agent):
     def __init__(self, observation_space:Space, action_space:Space):
         self.action_space = action_space
         self.name = type(self).__name__ + "Agent"
-        self.checkpoint_name = 'checkpoints/' + self.name + '.cpt'
+        self.checkpoint_name = 'checkpoints/' + self.name + '.ckpt'
 
         # Dummy variable so that save and load work out of the box.
         # Delete it when you build your own model.
@@ -47,7 +47,6 @@ class {name}(Agent):
         try:
             saver.restore(sess, self.checkpoint_name)
         except (tf.errors.InvalidArgumentError, tf.errors.NotFoundError):
-            # TODO(tom) Make this a log
             print("Checkpoint file not found, skipping load")
     
     def save(self, sess:tf.Session):

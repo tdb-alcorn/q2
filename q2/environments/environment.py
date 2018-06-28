@@ -10,6 +10,9 @@ State = Any
 Info = Any
 
 class Environment(ABC):
+    ### Properties ###
+    # message: str -- picked up by the training regimen and displayed after each step
+
     @abstractmethod
     def reset(self) -> State:
         """Reset the environment and returns the initial state."""

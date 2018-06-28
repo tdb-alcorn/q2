@@ -1,10 +1,13 @@
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractproperty
 import tensorflow as tf
 import numpy as np
 from gym import Space
 
 
 class Agent(ABC):
+    ### Properties ###
+    # message: str -- picked up by the training regimen and displayed after each step
+
     @abstractmethod
     def __init__(self, observation_space:Space, action_space:Space):
         pass
