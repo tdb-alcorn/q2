@@ -76,6 +76,7 @@ generate an agent called ``dqn``::
 
 Now you should have a file at ``q2_tutorial/agents/dqn.py``. Open it up in
 an editor. You should see a Python class definition that begins::
+
     class Dqn(Agent):
         ...
 
@@ -267,6 +268,7 @@ else that needs to be done here, although soon there will be::
 
 You're done! You now have a fully functioning DQN agent. Try it out in a
 training session::
+
     q2 train dqn --env gym.CartPole-v1 --episodes 10 --render
 
 Once again you should see the cart-pole environment rendered on the screen,
