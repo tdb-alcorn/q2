@@ -10,6 +10,10 @@ class Agent(ABC):
 
     @abstractmethod
     def __init__(self, observation_space:Space, action_space:Space):
+        """
+        This is where you will define the neural network and setup other objects
+        that the agent needs.
+        """
         pass
 
     @abstractmethod

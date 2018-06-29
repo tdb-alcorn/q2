@@ -39,9 +39,6 @@ Contents
 * :ref:`modindex`
 * :ref:`search`
 
-.. .. automodule:: q2.agents
-    :members:
-
 
 -----------
 Get started

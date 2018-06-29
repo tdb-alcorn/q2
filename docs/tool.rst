@@ -1,4 +1,3 @@
-=================
 Command line tool
 =================
 
@@ -7,6 +6,15 @@ q2 offers three basic commands:
 * ``init``
 * ``generate``
 * ``train``
+
+You can run::
+
+    q2 --help
+
+to see usage on the command line.
+
+Commands
+-----------
 
 ``init``
     Initialize a new project

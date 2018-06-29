@@ -1,4 +1,3 @@
-=================
 Project structure
 =================
 
@@ -18,7 +17,7 @@ from within your project directory.
 
 Each of the directories contains your agents, environments, objectives and
 regimens respectively. q2 uses ``objects.yaml`` to keep track of your stuff
-so that the command line tool knows where to look for it. It is a `YAML <link
-to YAML>`_ file that contains a reference to each user-defined object with some
-supporting information and metadata. You shouldn't need to modify it
-directly, but it does need to be checked into source control.
+so that the command line tool knows where to look for it. It is a `YAML
+<http://yaml.org/>`_ file that contains a reference to each user-defined
+object with some supporting information and metadata. You shouldn't need to
+modify it directly, but it does need to be checked into source control.

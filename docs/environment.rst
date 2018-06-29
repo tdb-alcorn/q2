@@ -1,45 +1,71 @@
-============
 Environments
 ============
 
-Agents need something to interact with, and so we created training
-environments. You should be able to go a long way with the built-in
-environments, which come from OpenAI Gym and OpenAI Retro (TODO Link to
-OpenAI gym and retro websites, specifically the sections about environments).
-Any OpenAI Gym environment can be specified as ``gym.<environment>``, and
-similarly any OpenAI Retro can be specified as ``retro.<game>``. Note that some
-of the Retro environments require special ROMs (see the OpenAI Retro website
-for details). Here are some good environments to get you started:
+Environments evolve over time as the agent interacts with it, typically according
+to predetermined rules so that the environment presents consistent behaviour. They
+may also define end conditions that cause the episode to end.
 
-* ``gym.CartPole-v1``
-* ``gym.MountainCar-v0``
-...
+q2 comes with a set of environments from `OpenAI Gym <https://gym.openai.com/>`_
+and `OpenAI Retro <https://github.com/openai/retro>`_. On the command line, run::
+
+    q2 train random --env gym.CartPole-v1 --episodes 10 --render
+
+to see OpenAI Gym's cart-pole environment in action.
+
+Any OpenAI gym environment can be referenced from the command line tool as
+``gym.<environment>``, and similarly any OpenAI Retro can be specified as
+``retro.<game>``. Note that some of the Retro environments require special
+ROMs [#f1]_. 
 
 However, eventually you may want to design your own training environment. To
-do so, you need to make a Python class that inherits from ``q2.Environment``,
-which means that
+do so, you need to make a Python class that inherits from the abstract base
+class ``q2.environments.Environment``, which means that you will implement
+the following interface:
 
-Environments implement the following interface:
+.. py:class:: q2.environments.Environment
 
-* ``reset() -> state``
-* ``step(action) -> next_state, reward, done, info``
-* ``render()``
-* ``close()``
-* ``action_space -> gym.Space``
-* ``observation_space -> gym.Space``
+    An abstract base class (interface) that specifies what the environment
+    must implement. You will fill in your own definitions for each of these
+    methods.
 
-The most important of these are ``reset()`` and ``step(action)``. As you can tell
-from the name, ``reset`` sets the environment to some appropriate starting
-configuration and returns a state from the ``observation_space``. Then ``step``
-accepts an action (which should match the spec in ``action_space``) and returns a
-4-tuple that includes the ``next_state`` of the environment, how much ``reward``
-was given, a boolean flag called ``done`` to indicate whether the game is finished
-(``True`` means finished) and finally an optional dictionary ``info`` that can be
-used for a variety of purposes including inspecting the environment's
-internals for training or debugging purposes.
+    .. py:method:: reset() -> state
 
-The ``render()`` method is optional to implement, ignore it if you don't
-care about seeing the environment on the screen. If you do want to implement it,
-I recommend creating a new window the first time ``render`` is called, drawing
-to it every subsequent time and then closing the window from within
-``close()``.
+        Reset the environment to its initial state and return it.
+
+    .. py:method:: step(action) -> next_state, reward, done, info
+
+        Given the agent's choice of action, move the environment forward one
+        time step and return a 4-tuple that includes the new state, the
+        reward as a ``float``, whether the environment has entered an end
+        state as a ``bool``, and an arbitrary info ``dict`` which may be used
+        to output debugging information.
+        
+        The agents action must match the spec in ``action_space`` and the new
+        state returned must match the spec in ``observation_space``.
+
+    .. py:method:: render()
+
+        Optional to implement, ignore it if you don't care about seeing the
+        environment on the screen. If you do want to implement it, a good
+        practice is to create a new window the first time ``render`` is
+        called, drawing to it on every subsequent call and then closing the
+        window from within ``close()``.
+
+    .. py:method:: close()
+
+        Shutdown the environment, freeing any resources (e.g. rendering
+        windows).
+
+    .. py:attribute:: observation_space, action_space
+
+        These attributes must be set to instances of :py:class:`gym.Space`.
+        They provide a specification of the allowable actions and environment
+        states, which agents may use to define their internal models.
+
+        All states returned by the environment must match the spec in
+        ``observation_space``.
+
+
+.. rubric:: Footnotes
+
+.. [#f1] See the https://github.com/openai/retro#roms for details.

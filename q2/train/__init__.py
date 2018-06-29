@@ -17,7 +17,6 @@ def add_arguments(parser:argparse.ArgumentParser):
     parser.add_argument('--state', type=str, dest='state', default='', help='name of the initial environment state (empty string means a random one will be chosen for you)')
     parser.add_argument('--render', const=True, default=False, action='store_const', dest='render', help='enable rendering of training to video')
     parser.add_argument('--bk2dir', type=str, dest='bk2dir', default=None, help='optional directory to store .bk2 gameplay files')
-    parser.add_argument('--output', type=str, dest='out_filename', default='', help='file prefix in which to save training losses and rewards')
     parser.add_argument('--save', const=True, default=False, action='store_const', dest='save', help='save episode for later offline training')
     parser.add_argument('--batch-size', type=int, dest='batch_size', default=1, metavar='N', help='batch size for offline training')
     parser.add_argument('--data', type=str, dest='data_pattern', default='./**/*_*_*_*.npz', help='glob pattern matching data for offline training')
@@ -76,16 +75,13 @@ def main(args:argparse.Namespace):
     if args.bk2dir is not None:
         ensure_directory_exists(args.bk2dir)
 
-    if args.out_filename[-4:] == '.csv':
-        args.out_filename = args.out_filename[:-4]
-
     if regimen_constructor is Offline:
         regimen = regimen_constructor(agent_constructor, objective, batch_size=args.batch_size, data=args.data_pattern)
     else:
         regimen = regimen_constructor(agent_constructor, objective)
-        regimen.use(DisplayFramerate())
         # regimen.use(ManualOverride())
-        regimen.use(NoProgressEarlyStopping(500, progress_threshold=0))
+        # regimen.use(DisplayFramerate())
+        # regimen.use(NoProgressEarlyStopping(500, progress_threshold=0))
         if args.save:
             regimen.use(SaveTrainingData())
 

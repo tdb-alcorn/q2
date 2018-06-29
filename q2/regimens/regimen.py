@@ -1,5 +1,5 @@
 import tensorflow as tf
-from typing import Type, Union, NamedTuple, Dict, Any, Callable
+from typing import Type, Union, NamedTuple, Dict, Any, Callable, List
 from contextlib import closing
 from q2.agents import Agent
 from q2.objectives import Objective
@@ -43,7 +43,7 @@ class Regimen(object):
         config:Dict[str, Any]=dict(),
     ):
         self.message = list()
-        self.plugins = list()
+        self._plugins = self.plugins()
         self.objective = objective
         self.agent_constructor = agent_constructor
         self.rewards = list()
@@ -57,7 +57,10 @@ class Regimen(object):
         self.agent = None
         self.action = None
         self.state = ''
-    
+
+    def plugins(self) -> List[Plugin]:
+        return list()
+
     def log(self, message:str):
         self.message.append(message)
     
@@ -69,7 +72,6 @@ class Regimen(object):
         test:bool=False,
         render:bool=False,
         bk2dir=None,
-        out_filename:str='',
     ):
         self.env_maker = env_maker
         self.state = state
@@ -89,7 +91,7 @@ class Regimen(object):
 
         self.agent.load(self.sess)
 
-        for plugin in self.plugins:
+        for plugin in self._plugins:
             plugin.before_training(self)
         self.before_training()
 
@@ -101,7 +103,6 @@ class Regimen(object):
                     episodes_per_epoch,
                     render=render,
                     bk2dir=bk2dir,
-                    out_filename=out_filename
                 )
                 epoch_count += 1
         else:
@@ -111,10 +112,9 @@ class Regimen(object):
                     episodes_per_epoch,
                     render=render,
                     bk2dir=bk2dir,
-                    out_filename=out_filename
                 )
         
-        for plugin in self.plugins:
+        for plugin in self._plugins:
             plugin.after_training(self)
         self.after_training()
 
@@ -125,7 +125,6 @@ class Regimen(object):
         episodes:int,
         render:bool=False,
         bk2dir:Union[str, None]=None,
-        out_filename:str='',
     ):
         try:
             if not self.offline:
@@ -139,7 +138,7 @@ class Regimen(object):
                 else:
                     self.env = self.env_maker.make(self.state)
 
-            for plugin in self.plugins:
+            for plugin in self._plugins:
                 plugin.before_epoch(self, epoch)
             self.before_epoch(epoch)
 
@@ -147,7 +146,7 @@ class Regimen(object):
                 reward = self.run_episode(episode, render=render)
                 self.rewards.append((epoch, self.env_maker.name, self.state, episode, reward))
 
-            for plugin in self.plugins:
+            for plugin in self._plugins:
                 plugin.after_epoch(self, epoch)
             self.after_epoch(epoch)
 
@@ -174,7 +173,7 @@ class Regimen(object):
             self.step = Step([])
         self.objective.reset()
 
-        for plugin in self.plugins:
+        for plugin in self._plugins:
             plugin.before_episode(self, episode)
         self.before_episode(episode)
 
@@ -184,7 +183,7 @@ class Regimen(object):
                 self.message = list()
                 self.step.action = self.agent.act(self.sess, self.step.state, not self.test)
 
-                for plugin in self.plugins:
+                for plugin in self._plugins:
                     plugin.before_step(self, self.step)
                 self.before_step(self.step)
 
@@ -192,13 +191,13 @@ class Regimen(object):
                     self.run_step(self.step, render=render)
                     total_reward += self.step.reward
                 except (Exception, KeyboardInterrupt) as e:
-                    for plugin in self.plugins:
+                    for plugin in self._plugins:
                         if not (plugin.on_error(self, self.step, e) == True):
                             raise
                     if not (self.on_error(self.step, e) == True):
                         raise
 
-                for plugin in self.plugins:
+                for plugin in self._plugins:
                     plugin.after_step(self, self.step)
                 self.after_step(self.step)
 
@@ -219,12 +218,12 @@ class Regimen(object):
             # newline for message
             print()
 
-        for plugin in self.plugins:
+        for plugin in self._plugins:
             plugin.after_episode(self, episode)
         self.after_episode(episode)
 
     def use(self, plugin:Plugin):
-        self.plugins.append(plugin)
+        self._plugins.append(plugin)
 
     def run_step(self, step:Step, render:bool=False):
         next_state, reward, done, info = self.env.step(step.action)
@@ -233,14 +232,6 @@ class Regimen(object):
         self.agent.step(self.sess, step.state, step.action, reward, next_state, done)
         if render:
             self.env.render()
-
-    # User-defined methods
-    def config(self) -> Dict[str, Any]:
-        '''
-        config should return a dictionary of parameter names needed from the
-        caller mapped to their default values.
-        '''
-        return dict()
 
     def before_epoch(self, epoch:int):
         pass

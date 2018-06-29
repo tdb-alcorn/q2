@@ -1,13 +1,14 @@
+from typing import List
+from q2.regimens import Plugin
+from q2.regimens.plugins import DisplayFramerate
 from q2.regimens.regimen import Regimen
 
 
 class {name}(Regimen):
-    def config(self) -> Dict[str, Any]:
-        '''
-        config should return a dictionary of parameter names needed from the
-        caller mapped to their default values.
-        '''
-        return dict()
+    def plugins(self) -> List[Plugin]:
+        return [
+            DisplayFramerate(),
+        ]
 
     def before_epoch(self, epoch:int):
         pass

@@ -5,6 +5,11 @@ from q2.environments import all_environments
 
 
 class RL2(Regimen):
+    def plugins(self):
+        return [
+            DisplayFramerate()
+        ]
+
     def before_epoch(self, epoch:int):
         tf.reset_default_graph()
         self.agent = self.agent_constructor()
