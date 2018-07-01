@@ -1,10 +1,10 @@
 Tutorial
 ========
 
-In this tutorial you will use q2 to implement a reasonably good Deep-Q
-Network to solve the cart-pole problem. The goal is to familiarize you with
-q2, show you how it can speed up and simplify development and maybe even
-learn a bit about reinforcement learning to boot.
+In this tutorial you will use q2 to implement a Deep-Q Network that can solve
+the cart-pole problem. The goal is to familiarize you with q2, show you how
+it can speed up and simplify development and maybe even learn a bit about
+reinforcement learning to boot.
 
 The cart-pole problem is the problem of attempting to balance a vertical pole
 on top of a cart that can roll horizontally. It's a classic problem in
@@ -296,11 +296,11 @@ At the top of the file, ``import`` a decaying noise generator like so::
 
     from q2.agents.noise import DecayProcess
 
-``DecayProcess`` generates a stream of ``1``s and ``0``s, with ``1``s showing
+``DecayProcess`` generates a stream of ``1``\ s and ``0``\ s, with ``1``\ s showing
 up less and less frequently as the process goes on. We can use this to add
 some randomness to our agents behaviour that starts out big and slowly
 disappears, letting the agent have more control. Go back down to ``__init__``
-and add a line to instantiate the ``DecayProcess``::
+and add a line to instantiate the ``DecayProcess``\ ::
 
     def __init__(...):
         ...

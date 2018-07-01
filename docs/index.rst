@@ -2,38 +2,21 @@ Welcome to q2!
 ==============
 
 q2 is a reinforcement learning framework and command line tool. It consists
-of a set of interfaces that help organize RL research and development, and a
-set of command line tools that unify your workflow. It also comes "batteries-included"
-with a set of helpful components and utilities that are needed frequently in
-reinforcement learning work.
+of a set of interfaces that help organize research and development and a set
+of command line tools that unify your workflow. It also comes
+"batteries-included" with a set of helpful components and utilities that are
+frequently used in reinforcement learning work.
 
 q2 aims to improve your reinforcement learning work in the following ways:
 
 * Reduce boilerplate, no more copy-pasted code, avoid reinventing the wheel
 * Easier collaboration if your colleagues are familiar with q2
-* Faster iteration time: try out your own RL idea in only three steps.
+* Faster iteration time: try out a new reinforcement learning idea in only
+  three steps
 
 q2 is completely open-source and under active development, so if you find
-something missing, please reach out!
-
-
-Contents
---------
-
-.. toctree::
-   :maxdepth: 2
-
-   agent
-   environment
-   objective
-   regimen
-   structure
-   tool
-   tutorial
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+something missing, please reach out on `Github
+<https://github.com/tdb-alcorn/q2>`_!
 
 
 Get started
@@ -45,7 +28,7 @@ Installation
 You will need to be using Python 3.5 or greater (this is because q2 makes
 extensive use of Python's new type annotations).
 
-Then simply::
+Then simply run::
 
     pip install q2
 
@@ -54,11 +37,12 @@ First time usage
 ^^^^^^^^^^^^^^^^
 
 To support your work, q2 needs a certain project structure. For a new
-project, you can generate this structure by running::
+project, you can generate this structure by running the following command
+from within the project directory::
 
     q2 init
 
-from within the project directory. This will create four folders and one file:
+This will create four folders and one file:
 
 * ``agents/``
 * ``environments/``
@@ -73,17 +57,36 @@ You can then run::
 to see how to go about generating new agents, environments, objectives,
 regimens and more.
 
-To see q2 in action right away, start a training session by running::
+To see q2 in action right away, start a training session with q2's built-in
+``random`` agent in OpenAI Gym's ``Cartpole-v1`` environment by running::
 
     q2 train random --env gym.CartPole-v1 --episodes 10 --render
 
 You should see a window open up rendering the ``CartPole-v1`` environment
-from OpenAI Gym, with q2's ``random`` agent playing. The basic syntax of the
-``train`` command is::
+with ``random`` agent playing. The basic syntax of the ``train`` command is::
 
     q2 train <agent> --env <environment> --episodes <num_episodes> --render
 
 Run ``q2 train --help`` to see all the options.
+
+
+Contents
+--------
+
+.. toctree::
+   :maxdepth: 2
+
+   tutorial
+   tool
+   structure
+   agent
+   environment
+   objective
+   regimen
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
 
 
 Project goals
@@ -138,6 +141,6 @@ If you find something wrong, please create an issue on the `Github page
 About the author
 ----------------
 
-I'm a software engineer who hacks on RL projects in my spare time. My
+I'm a software engineer and I hack on RL projects in my spare time. My
 personal website and blog can be found at `tdb-alcorn.github.io
 <https://tdb-alcorn.github.io>`_.
