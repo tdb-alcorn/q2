@@ -6,13 +6,13 @@ the cart-pole problem. The goal is to familiarize you with q2, show you how
 it can speed up and simplify development and maybe even learn a bit about
 reinforcement learning to boot.
 
-The cart-pole problem is the problem of attempting to balance a vertical pole
-on top of a cart that can roll horizontally. It's a classic problem in
-dynamics and fortunately, OpenAI gym offers an implementation of the problem
-in the `CartPole-v1 <https://gym.openai.com/envs/CartPole-v1/>`_ environment.
-You can think of the cart-pole problem as a video game with two buttons, left
-and right. Your goal is to keep the pole from falling over for as long as
-possible using only those two buttons.
+In the cart-pole problem, the agent must balance an unstable vertical pole on
+top of a cart that can roll horizontally. It's a classic problem in dynamics
+and fortunately, OpenAI gym offers an implementation of the problem in the
+`CartPole-v1 <https://gym.openai.com/envs/CartPole-v1/>`_ environment, which
+you can access through q2. You can think of the cart-pole problem as a video
+game with two buttons, left and right. Your goal is to keep the pole from
+falling over for as long as possible using only those two buttons.
 
 At each time step, the environment yields an observation that corresponds to
 the position and velocity of the cart, and the angular position and angular
@@ -35,7 +35,7 @@ Next, make a new folder called ``q2_tutorial`` for this project::
     mkdir q2_tutorial
     cd q2_tutorial
 
-Next, make a virtual environment to keep this project's dependencies isolated
+Then make a virtual environment to keep this project's dependencies isolated
 from the rest of your system::
 
     python3 -m venv env
@@ -45,14 +45,14 @@ And finally, install q2::
 
     pip install q2
 
-Now the action begins. q2 offers a command line interface that automates
-mundane tasks so you can spend more time on the problem. First, you can have
-q2 automatically setup your project structure::
+q2 offers a command line interface that automates mundane tasks so you can
+spend more time on the problem. First, you can have q2 automatically setup
+your project structure::
 
     q2 init
 
 Then, test that q2 is working properly by starting a training session on the
-cart-pole problem with the random agent::
+cart-pole problem with the built-in random agent::
 
     q2 train random --env gym.CartPole-v1 --episodes 10 --render
 
@@ -121,16 +121,16 @@ So at each time step the agent does something and gets a certain amount of
 reward. The DQN looks at the state that the environment was in, the action
 that was taken and makes a prediction for what the reward will be. It then
 compares its prediction with the actual reward that was given and updates
-itself based on its error. Then, when it comes time to choose the next
+itself based on its error. When it comes time to choose the next
 action, our agent simply runs the DQN and chooses the action that is
-predicted to produce the most reward. Simple, right?
+predicted to produce the most reward. That's it.
 
 Well, there is one small complication: the reward that we care about
 maximizing is actually the *total* future reward, not just the reward on the
-next time step. In other words, we need our agent to learn how to wait in
-order to take 10 marshmallows tomorrow rather than 1 today. To make that
-happen, the DQN is actually going to be learning to predict the total future
-reward of an action.
+next time step. For example, we want our agent to learn how to wait in order
+to take 10 marshmallows tomorrow rather than 1 today. To make that happen,
+the DQN is actually going to be learning to predict the total future reward
+of an action.
 
 After each time step, the agent will use the DQN twice: once to make a
 prediction about the state that it just acted on, and once to predict the
@@ -247,8 +247,8 @@ to optimise::
         })
         return loss
 
-Finally, ``step`` is where you run the training step. For now there is nothing
-else that needs to be done here, although soon there will be::
+Finally, ``step`` is where you run the learning step. For now there is nothing
+else that needs to be done here::
 
     def step(self,
         sess:tf.Session,
@@ -266,8 +266,8 @@ else that needs to be done here, although soon there will be::
 
         self.message = "Loss: {:.2f}".format(loss)
 
-You're done! You now have a fully functioning DQN agent. Try it out in a
-training session::
+You now have a fully functioning DQN agent! Try it out against the cart-pole
+environment in a training session::
 
     q2 train dqn --env gym.CartPole-v1 --episodes 10 --render
 
@@ -292,7 +292,7 @@ Exploration
 
 One way to remedy this is to break the loop by injecting some randomness into
 the agent's actions. q2 comes with some useful tools for this out of the box.
-At the top of the file, ``import`` a decaying noise generator like so::
+At the top of the file, import a decaying noise generator like so::
 
     from q2.agents.noise import DecayProcess
 
@@ -347,12 +347,12 @@ events in the order that they happened means that it is vulnerable to loops
 in the learning process that might prevent it from converging.
 
 We can fix this by adding one last component to the agent: a replay buffer.
-The agent will keep around a set of events that it saw in the past, and at
-each step it will sample from this buffer to get training data for the learning
-step. This breaks potential feedback loops because learning is happening out of
-order, and also reduces variance in the gradient step by averaging over multiple
-data points. Once again, q2 comes with a helper to make implementing this easy.
-At the top of the file, add::
+The agent will record each step of the environment to a buffer, and at each
+step it will sample from this buffer to get training data for the learning
+step. This breaks potential feedback loops because learning can happen out of
+order. It also reduces variance in the gradient step by averaging over
+multiple data points. Once again, q2 comes with a helper to make implementing
+this easy. At the top of the file, add::
 
     from q2.agents.history import History
 
@@ -395,9 +395,9 @@ when it started. Try running the random agent again to compare.
 That's the end of this tutorial. Hopefully you see how q2 makes developing RL
 agents easier and faster. For some next steps, try modifying this agent to
 learn other environments. Or try messing with the model parameters and
-architecture to see if you can get it to solve cart-pole faster (OpenAI Gym
+architecture to see if you can get it to solve cart-pole faster: OpenAI Gym
 defines solving cart-pole as consistently achieving an episode score above
-195).
+195.
 
 
 Source code
