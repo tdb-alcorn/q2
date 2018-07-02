@@ -87,4 +87,4 @@ def main(args:argparse.Namespace):
 
 
     # Run training
-    regimen.train(env_maker, state, args.num_epochs, args.episodes_per_epoch, test=args.test, render=args.render, bk2dir=args.bk2dir, out_filename=args.out_filename)
+    regimen.train(env_maker, state, args.num_epochs, args.episodes_per_epoch, test=args.test, render=args.render, bk2dir=args.bk2dir)

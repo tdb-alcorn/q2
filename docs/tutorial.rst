@@ -63,6 +63,12 @@ would be a random string of lefts (\ ``0``\ ) and rights (\ ``1``\ ). This turns
 out not to be a very good strategy. It's time to build our own agent, to see
 if we can do better.
 
+.. figure:: /images/cartpole-v1-random.gif
+    :align: center
+
+    The ``random`` agent playing ``gym.CartPole-v1``.
+
+
 Generate
 ^^^^^^^^
 
