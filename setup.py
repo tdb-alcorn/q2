@@ -6,7 +6,7 @@ def readme():
 
 setup(
     name='q2',
-    version='0.1.3',
+    version='0.1.4',
     description='A reinforcement learning framework and command line tool',
     long_description=readme(),
     classifiers=[
