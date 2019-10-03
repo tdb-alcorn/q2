@@ -1,7 +1,7 @@
 numpy==1.14.3
 # Downgrade Tensorflow to avoid illegal instruction error when ReadTheDocs imports it
 tensorflow==1.5.0
-PyYAML==3.12
+PyYAML==5.1
 gym==0.10.5
 gym-retro==0.5.4
 Sphinx==1.7.5
