@@ -1,5 +1,5 @@
 numpy==1.14.3
-tensorflow==1.8.0
+tensorflow==1.12.2
 PyYAML==3.12
 gym==0.10.5
 gym-retro==0.5.4
